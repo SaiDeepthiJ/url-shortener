@@ -1,0 +1,34 @@
+service: url-shortener-frontend
+
+plugins:
+  - serverless-offline
+  - serverless-webpack
+
+custom:
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: us-east-1
+  environment:
+    MONGODB_URI: mongodb+srv://AdminUser:AdminUser@cluster0.hsmnl.mongodb.net/url_shortener?retryWrites=true&w=majority
+
+
+functions:
+  shorten:
+    handler: handler.shorten
+    events:
+      - http:
+          path: shorten
+          method: post
+          cors: true  # Enable CORS
+  redirect:
+    handler: handler.redirect
+    events:
+      - http:
+          path: redirect/{short_url}  # Corrected path
+          method: get
+          cors: true
